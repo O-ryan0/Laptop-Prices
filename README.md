@@ -32,10 +32,8 @@ Dataset disponível em: [Modern Laptop Prices and Specifications](https://www.ka
 ### d) Aprendizado de Máquina
 - **Pergunta-chave:** As features textuais extraídas via NLP melhoram a predição de preço?
 - **Modelos comparados:**
-  - Regressão Linear (baseline)
-  - Random Forest Regressor
-  - Gradient Boosting (XGBoost)
-- **Métricas de avaliação:** RMSE, MAE e R² — com validação cruzada de 5 folds.
+ 
+- **Métricas de avaliação:** 
 
 ---
 
