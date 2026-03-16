@@ -1,79 +1,83 @@
-<h1 align="center"> Análise exploratória </h1>
+<h1 align="center"> Análise Preditiva de Preços de Laptops com Processamento de Texto </h1>
 
 ## Descrição
+Projeto desenvolvido para a disciplina de **Projeto Aplicado II** do curso de Banco de Dados da Universidade Presbiteriana Mackenzie, segundo semestre.  
+O foco deste projeto é desenvolver uma análise preditiva de preços de laptops modernos, combinando técnicas de **análise exploratória de dados (EDA)**, **processamento de linguagem natural (NLP)** e **aprendizado de máquina**.  
+Os dados utilizados foram extraídos de uma base pública disponível no Kaggle, contendo informações detalhadas sobre especificações técnicas e preços de laptops comercializados em 2024.  
 
-Projeto desenvolvido para a disciplina de **Projeto aplicado II** do curso Banco de Dados da Universidade Presbiteriana Mackenzie, segundo semestre.  
-O foco deste projeto é desenvolver uma análise exploratória de dados.  
-
-Os dados utilizados foram extraídos de uma base pública disponível no Kaggle, contendo informações detalhadas sobre o comércio eletrônico no Brasil, incluindo pedidos, produtos, clientes, pagamentos e avaliações de satisfação.  
-
-Dataset disponível em: [nome](link)
+Dataset disponível em: [Modern Laptop Prices and Specifications](https://www.kaggle.com/datasets/sohaibdevv/modern-laptop-prices-and-specifications)
 
 ---
 
 ## Objetivo Principal
-
 **Pergunta central:**  
-Como a 
-### a) Análise da Taxa de Atraso vs. Notas de Avaliação
-- **Preparação dos Dados:**  
-  - Remover valores nulos das colunas de data.  
-  - Converter datas para o formato `datetime`.  
-  - Calcular o atraso em dias para cada pedido (`data real de entrega - data estimada de entrega`).  
-  - Calcular a taxa média de atraso.  
-- **Análise:**  
-  - Visualizar a taxa média de atraso.  
-  - Comparar notas de avaliação para pedidos **com atraso acima e abaixo da média**.  
+É possível melhorar a predição de preços de laptops extraindo features a partir dos campos de texto do dataset (como nome do processador e da GPU), comparado a um modelo que usa apenas dados numéricos?
 
-### b) Desempenho do Vendedor
-- Identificar **qual vendedor tem a maior taxa de pedidos atrasados**.  
+### a) Aquisição e Preparação dos Dados
+- **Preparação dos Dados:**
+  - Ingestão do arquivo `.csv` e tratamento de valores ausentes.
+  - Normalização de strings (remoção de caracteres especiais, padronização de maiúsculas).
+  - Armazenamento em banco relacional **SQLite** com esquema normalizado (tabelas: Laptop, Marca, Processador, GPU).
 
-### c) Análise Geográfica
-- Determinar **em quais zonas geográficas** (estados/municípios) os pedidos são mais frequentemente atrasados.  
+### b) Processamento de Texto (NLP)
+- Extração de features das colunas `Processor`, `GPU` e `Model` via **regex** e **tokenização**.
+- Variáveis geradas: fabricante e geração da CPU, se tem GPU dedicada, série da GPU e bag-of-words do nome do modelo (TF-IDF).
 
-### d) Análise Multifatorial
-- **Pergunta-chave:** O atraso é o único fator que reduz as notas de avaliação?  
-- **Subperguntas:**  
-  - Dentre as avaliações abaixo da média, qual porcentagem corresponde a pedidos atrasados?  
-  - Existe algum estado que contribui de forma desproporcional para o número de avaliações ruins?  
-  - Quais **categorias de produtos** concentram a maioria das avaliações ruins?  
+### c) Análise Estatística Preditiva
+- Distribuição das variáveis e identificação de outliers.
+- Testes de hipótese (Kruskal-Wallis) para comparar preço médio entre marcas.
+- Regressão linear múltipla como baseline.
+- Matriz de correlação entre variáveis numéricas e o preço.
+
+### d) Aprendizado de Máquina
+- **Pergunta-chave:** As features textuais extraídas via NLP melhoram a predição de preço?
+- **Modelos comparados:**
+  - Regressão Linear (baseline)
+  - Random Forest Regressor
+  - Gradient Boosting (XGBoost)
+- **Métricas de avaliação:** RMSE, MAE e R² — com validação cruzada de 5 folds.
 
 ---
 
 ## Conclusão Esperada
-Sintetizar os resultados para determinar como cada fator — **desempenho do vendedor**, **localização geográfica**, **categoria do produto** e **atraso nas entregas** — impacta **individualmente** e **coletivamente** as notas de avaliação dos clientes.  
+Sintetizar os resultados para determinar como cada fator — **marca**, **geração do processador**, **GPU**, **memória RAM** e **armazenamento** — impacta **individualmente** e **coletivamente** o preço final do laptop, e demonstrar o ganho de performance ao incluir features extraídas de texto no modelo preditivo.
 
 ---
 
 ## Dataset
+- `laptop_prices.csv` (usado)
 
+**Variáveis principais:**
 
-- `olist_orders_dataset.csv`  (usado)  
-- `olist_order_reviews_dataset.csv`  (usado)  
-- `olist_products_dataset.csv`  (usado)  
-- `olist_geolocation_dataset.csv`  (usado)  
-- `olist_order_items_dataset.csv`  -
-- `olist_customers_dataset.csv`   -
-- `olist_order_payments_dataset.csv`   -
-- `product_category_name_translation.csv` -
+| Coluna | Tipo | Descrição |
+|---|---|---|
+| `Brand` | Categórico | Marca do fabricante |
+| `Model` | Texto livre | Nome comercial do produto |
+| `Processor` | Texto semi-estruturado | Nome do processador (fabricante, família, geração) |
+| `RAM (GB)` | Numérico | Memória RAM em GB |
+| `Storage (GB)` | Numérico | Capacidade de armazenamento em GB |
+| `Storage Type` | Categórico | SSD, HDD ou híbrido |
+| `Screen Size` | Numérico | Tamanho da tela em polegadas |
+| `GPU` | Texto semi-estruturado | Modelo da placa gráfica |
+| `Operating System` | Categórico | Sistema operacional |
+| `Price (USD)` | Numérico | **Variável-alvo** — preço em dólares |
 
 ---
 
 ## Referências do Dataset
-
 - **Origem dos Dados:**  
-  O conjunto de dados foi obtido por meio da plataforma **Kaggle**, no dataset *Brazilian E-Commerce Public Dataset by Olist* (https://www.kaggle.com/datasets/olistbr/brazilian-ecommerce/data), disponibilizado pela empresa **Olist**.  
+  O conjunto de dados foi obtido por meio da plataforma **Kaggle**, no dataset *Modern Laptop Prices and Specifications* (https://www.kaggle.com/datasets/sohaibdevv/modern-laptop-prices-and-specifications), publicado pelo usuário **sohaibdevv**.
 
 - **Originalidade e Limitações:**  
-  Este dataset foi construído a partir de transações reais realizadas na plataforma Olist. Os dados são anonimizados, e algumas informações foram traduzidas para maior acessibilidade.  
+  Os dados foram coletados via web scraping em varejistas globais de tecnologia durante 2024. Os preços estão em dólares americanos (USD) e podem não refletir variações regionais de mercado.
 
 - **Período da Coleta:**  
-  Os pedidos foram realizados entre **2016 e 2018**.  
+  Produtos disponíveis comercialmente em **2024**.
 
 - **Limitações de Uso:**  
-  Por se tratar de um dataset público e de fonte secundária, seu uso é destinado a fins acadêmicos e de pesquisa. Os insights devem ser analisados considerando as limitações de representatividade (somente dados da Olist) e possíveis simplificações feitas para a versão pública.  
+  Por se tratar de um dataset público e de fonte secundária, seu uso é destinado a fins acadêmicos e de pesquisa. Os insights devem ser analisados considerando que os dados refletem apenas o catálogo disponível no período de coleta.
 
-
+---
 
 ## Integrantes
 Este projeto foi desenvolvido pelos seguintes integrantes:
@@ -82,9 +86,6 @@ Este projeto foi desenvolvido pelos seguintes integrantes:
 - Nour Hussein Barakat
 - Guilherme de Araújo Esp. Santo
 
-
-**Universidade Presbiteriana Mackenzie** \
-**Curso Banco de dados** \
-**Projeto Aplicado I - 2º Semestre  2025** 
-
-
+**Universidade Presbiteriana Mackenzie**  
+**Curso Banco de Dados**  
+**Projeto Aplicado II - 2º Semestre 2025**
