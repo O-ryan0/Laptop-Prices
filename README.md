@@ -1,77 +1,129 @@
-<h1 align="center"> Laptops Dataset for prediction of laptop prices </h1>
-Descrição
-Projeto desenvolvido para a disciplina de Projeto Aplicado II do curso de Banco de Dados da Universidade Presbiteriana Mackenzie, segundo semestre. <br>
-O foco deste projeto é desenvolver uma análise preditiva de preços de laptops, combinando técnicas de análise exploratória de dados (EDA), processamento de linguagem natural (NLP) e aprendizado de máquina. <br>
-Os dados utilizados foram extraídos de uma base pública disponível no Kaggle, contendo especificações técnicas detalhadas e preços (em euros) de 1.146 modelos de laptops.
-Dataset disponível em: [Laptop Prices](https://www.kaggle.com/datasets/abdelrahmanemad594/laptop-prices?resource=download)
+# Laptop Price Prediction with NLP
 
-Objetivo Principal
-Pergunta central:
-**É possível melhorar a predição de preços de laptops extraindo features a partir dos campos de texto do dataset (como modelo de CPU e GPU), comparado a um modelo que usa apenas dados numéricos?**
-<br>
-<br>
+## Descrição
 
-**a) Aquisição e Preparação dos Dados**
+Este projeto foi desenvolvido para a disciplina **Projeto Aplicado II** do curso de **Banco de Dados** da **Universidade Presbiteriana Mackenzie**.
 
-Preparação dos Dados:
+A proposta consiste em desenvolver uma análise preditiva de preços de laptops, combinando técnicas de **análise exploratória de dados (EDA)**, **processamento de linguagem natural (NLP)** e **aprendizado de máquina**.
 
-Ingestão do arquivo .csv e remoção da coluna vazia Unnamed: 16
-Conversão da coluna Ram de string (ex.: "8GB") para numérico
-Conversão da coluna Cpu Rate de string (ex.: "2.5GHz") para numérico
-Tratamento de valores ausentes e normalização de strings
+Os dados utilizados foram obtidos a partir de uma base pública do Kaggle, contendo especificações técnicas detalhadas e preços, em euros, de **1.146 modelos de laptops**.
+
+Dataset: [Laptop Prices](https://www.kaggle.com/datasets/abdelrahmanemad594/laptop-prices/data)
+
+---
+
+## Organização
+
+Este projeto é desenvolvido pela empresa fictícia **DataPrice Analytics**, especializada em análise de dados e inteligência de mercado no setor de tecnologia.
+
+A empresa atua apoiando varejistas e fabricantes na definição de estratégias de precificação, utilizando modelos preditivos baseados em dados históricos de produtos.
+
+Nesse contexto, o projeto busca gerar insights estratégicos sobre a formação de preços no mercado de laptops e desenvolver um modelo preditivo aplicável ao ambiente de negócios.
+
+---
+
+## Objetivo Principal
+
+Este projeto tem como objetivo desenvolver um modelo preditivo capaz de estimar o preço de laptops com base em suas especificações técnicas, identificando quais componentes de hardware possuem maior impacto na formação de preço.
+
+Além disso, busca-se avaliar a viabilidade de prever o valor de mercado de um laptop a partir de seus atributos, utilizando técnicas de aprendizado de máquina e processamento de linguagem natural.
+
+---
+
+## Perguntas de Negócio
+
+- Quais componentes de hardware impactam mais no preço de um laptop?
+- É possível prever o preço de um laptop com base em suas especificações técnicas?
+- A inclusão de informações textuais, como modelo de CPU e GPU, melhora o desempenho do modelo preditivo?
+
+---
+
+## Etapas do Projeto
+
+### a) Aquisição e Preparação dos Dados
+
+- Ingestão do arquivo CSV
+- Remoção da coluna vazia `Unnamed: 16`
+- Conversão de variáveis como RAM e frequência da CPU para formato numérico
+- Tratamento de valores ausentes
+- Padronização e normalização de dados
+
+### b) Processamento de Texto (NLP)
+
+- Extração de informações de CPU e GPU via expressões regulares
+- Identificação de presença de GPU dedicada
+- Extração de resolução de tela
+- Aplicação de **TF-IDF** na variável `Product`
+
+### c) Análise Estatística
+
+- Distribuição dos preços
+- Identificação de outliers
+- Testes de hipótese, como **Kruskal-Wallis**
+- Correlação entre variáveis numéricas
+
+### d) Machine Learning
+
+- Regressão Linear
+- Random Forest
+- XGBoost
+- Comparação entre modelos com e sem uso de features textuais extraídas por NLP
+
+---
+
+## Tecnologias Utilizadas
+
+- pandas
+- numpy
+- matplotlib
+- scipy
+- scikit-learn
 
 
-<br>
+---
 
-**b) Processamento de Texto (NLP)**
+## Métricas de Avaliação
 
-Extração de features das colunas Cpu Model, Gpu Model e ScreenResolution via regex e tokenização.
-Variáveis geradas: família e geração da CPU, se tem GPU dedicada (Nvidia/AMD), resolução da tela extraída como numérico, e bag-of-words do Product (TF-IDF).
+Os modelos serão avaliados com base nas seguintes métricas:
 
-<br>
+- **RMSE** (Root Mean Squared Error)
+- **MAE** (Mean Absolute Error)
+- **R²** (Coeficiente de Determinação)
 
-**c) Análise Estatística Preditiva**
+Também será utilizada **validação cruzada com 5 folds**, com o objetivo de garantir maior robustez e confiabilidade aos resultados obtidos.
 
-Distribuição das variáveis e identificação de outliers em Price_euros
-Testes de hipótese (Kruskal-Wallis) para comparar preço médio entre marcas e tipos de laptop
-Regressão linear múltipla como baseline
-Matriz de correlação entre variáveis numéricas e o preço
+---
 
-<br>
+## Estrutura do Projeto
 
-**d) Aprendizado de Máquina**
+```bash
+Laptop-Prices/
+│
+├── data/
+│   └── laptop_prices.csv
+│
+├── notebooks/
+│   └── laptop_price_analysis.ipynb
+│
+├── docs/
+│   └── relatorio_etapa_2.docx
+│
+└── README.md
 
-Pergunta-chave: As features textuais extraídas via NLP melhoram a predição de preço?
+---
 
+## Integrantes
 
-<br>
-
-**Métricas de avaliação: RMSE, MAE e R² — com validação cruzada de 5 folds**
-
-
-Conclusão Esperada
-**Sintetizar os resultados para determinar como cada fator — marca, tipo de laptop, CPU, GPU, RAM e armazenamento - impacta individualmente e coletivamente o preço final, e demonstrar o ganho de performance ao incluir features extraídas de texto no modelo preditivo.**
-
-<br>
-Referências do Dataset
-
-Origem dos Dados:
-O conjunto de dados foi obtido por meio da plataforma Kaggle, no dataset Laptop Prices (https://www.kaggle.com/datasets/abdelrahmanemad594/laptop-prices/data), publicado pelo usuário abdelrahmanemad594.
-Originalidade e Limitações:
-O dataset contém 1.146 registros com especificações técnicas detalhadas de laptops. Os preços estão em euros (€) e podem não refletir variações regionais de mercado. Inclui uma coluna vazia (Unnamed: 16) que será descartada no pré-processamento.
-Período da Coleta:
-Modelos disponíveis comercialmente em 2017–2018.
-Limitações de Uso:
-Por se tratar de um dataset público e de fonte secundária, seu uso é destinado a fins acadêmicos e de pesquisa.
-
-
-Integrantes
 Este projeto foi desenvolvido pelos seguintes integrantes:
 
-**Ryan Rodrigues Pereira
-Nour Hussein Barakat
-Guilherme de Araújo Esp. Santo**
+- Ryan Rodrigues Pereira  
+- Nour Hussein Barakat  
+- Guilherme de Araújo Esp. Santo  
 
-Universidade Presbiteriana Mackenzie
-Curso Banco de Dados
-Projeto Aplicado II - 3º Semestre 2026
+---
+
+## Instituição
+
+Universidade Presbiteriana Mackenzie  
+Curso: Banco de Dados  
+Projeto Aplicado II — 3º semestre — 2026
